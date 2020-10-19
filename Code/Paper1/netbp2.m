@@ -18,66 +18,74 @@ usedArr = [];
 
 for counter = 1:Niter
     
-   deltaArr1 = 1:6;
-   deltaArr2 = 1:6;
+   if ismember(10, usedArr) && ismember(1, usedArr) && ismember(2, usedArr) && ismember(3, usedArr) && ismember(4, usedArr) && ismember(5, usedArr) && ismember(6, usedArr) && ismember(7, usedArr) && ismember(8, usedArr) && ismember(9, usedArr)
+        usedArr = [];
+   end
    
-    for counter = 1:2
-        if ismember(10, usedArr) && ismember(1, usedArr) && ismember(2, usedArr) && ismember(3, usedArr) && ismember(4, usedArr) && ismember(5, usedArr) && ismember(6, usedArr) && ismember(7, usedArr) && ismember(8, usedArr) && ismember(9, usedArr)
-            usedArr = [];
-        end
-        k = randi(10); % choose a training point at random
-        while ismember(k, usedArr)
-            k = randi(10);
-        end
-        if counter <= 20
-            usedArr
-        end
-        usedArr(end + 1) = k;
+   k = randi(10); % choose a training point at random
+   while ismember(k, usedArr)
+      k = randi(10);
+   end
+   usedArr(end + 1) = k;
 
-        x = [x1(k); x2(k)];
-        % Forward pass
-        a2 = activate(x,W2,b2);
-        a3 = activate(a2,W3,b3);
-        a4 = activate(a3,W4,b4);
-        % Backward pass
-        delta4 = (a4.*(1-a4).*(a4-y(:,k)))*a3';
-        delta3 = (a3.*(1-a3).*(W4'*delta4))*a2';
-        delta2 = (a2.*(1-a2).*(W3'*delta3))*x';
+   x = [x1(k); x2(k)];
+   % Forward pass
+   a2 = activate(x,W2,b2);
+   a3 = activate(a2,W3,b3);
+   a4 = activate(a3,W4,b4);
+   % Backward pass
+   delta14 = a4.*(1-a4).*(a4-y(:,k));
+   delta13 = a3.*(1-a3).*(W4'*delta14);
+   delta12 = a2.*(1-a2).*(W3'*delta13);
         
-        deltaArr1((counter - 1) * 3 + 1) = delta4;
-        deltaArr1((counter - 1) * 3 + 2) = delta3;
-        deltaArr1((counter - 1) * 3 + 3) = delta2;
+   delta141 = delta14*a3';
+   delta131 = delta13*a2';
+   delta121 = delta12*x';
+   
+   if ismember(10, usedArr) && ismember(1, usedArr) && ismember(2, usedArr) && ismember(3, usedArr) && ismember(4, usedArr) && ismember(5, usedArr) && ismember(6, usedArr) && ismember(7, usedArr) && ismember(8, usedArr) && ismember(9, usedArr)
+        usedArr = [];
+   end
+   
+   k = randi(10); % choose a training point at random
+   while ismember(k, usedArr)
+      k = randi(10);
+   end
+   usedArr(end + 1) = k;
+
+   x = [x1(k); x2(k)];
+   % Forward pass
+   a2 = activate(x,W2,b2);
+   a3 = activate(a2,W3,b3);
+   a4 = activate(a3,W4,b4);
+   % Backward pass
+   delta24 = a4.*(1-a4).*(a4-y(:,k));
+   delta23 = a3.*(1-a3).*(W4'*delta24);
+   delta22 = a2.*(1-a2).*(W3'*delta23);
         
-        delta4 = a4.*(1-a4).*(a4-y(:,k));
-        delta3 = a3.*(1-a3).*(W4'*delta4);
-        delta2 = a2.*(1-a2).*(W3'*delta3);
-        
-        deltaArr2((counter - 1) * 3 + 1) = delta4;
-        deltaArr2((counter - 1) * 3 + 2) = delta3;
-        deltaArr2((counter - 1) * 3 + 3) = delta2;
-        
-    end
+   delta242 = delta24*a3';
+   delta232 = delta23*a2';
+   delta222 = delta22*x';
+       
+   sumW2 = delta121 + delta222;
+   sumW3 = delta131 + delta232;
+   sumW4 = delta141 + delta242;
+   
+   sumB2 = delta12 + delta22;
+   sumB3 = delta13 + delta23;
+   sumB4 = delta14 + delta24;
     
-    sumW2 = deltaArr1(3) + deltaArr1(6);
-    sumW3 = deltaArr1(2) + deltaArr1(5);
-    sumW4 = deltaArr1(1) + deltaArr1(4);
-    
-    sumB2 = deltaArr2(3) + deltaArr2(6);
-    sumB3 = deltaArr2(2) + deltaArr2(5);
-    sumB4 = deltaArr2(1) + deltaArr2(4);
-    
-    % Gradient step
-    W2 = W2 - eta*sumW2;
-    W3 = W3 - eta*sumW3;
-    W4 = W4 - eta*sumW4;
-    b2 = b2 - eta*sumB2;
-    b3 = b3 - eta*sumB3;
-    b4 = b4 - eta*sumB4;
-    % Monitor progress
-    newcost = cost(W2,W3,W4,b2,b3,b4);  % semicolon toegevoegd voor efficientie, 
+   % Gradient step
+   W2 = W2 - eta*sumW2;
+   W3 = W3 - eta*sumW3;
+   W4 = W4 - eta*sumW4;
+   b2 = b2 - eta*sumB2;
+   b3 = b3 - eta*sumB3;
+   b4 = b4 - eta*sumB4;
+   % Monitor progress
+   newcost = cost(W2,W3,W4,b2,b3,b4);  % semicolon toegevoegd voor efficientie, 
                                             % printen duur 
                                             % display cost to screen
-    savecost(counter) = newcost;
+   savecost(counter) = newcost;
 end
 
 % Show decay of cost function
