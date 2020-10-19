@@ -1,4 +1,4 @@
-function netbp
+function netbp2
 
 %NETBP Uses backpropagation to train a network
 x1 = [0.1,0.3,0.1,0.6,0.4,0.6,0.5,0.9,0.4,0.7];
@@ -14,9 +14,22 @@ b2 = 0.5*randn(2,1); b3 = 0.5*randn(3,1); b4 = 0.5*randn(2,1);
 eta = 0.05; % learning rate
 Niter = 1e6; % number of SG iterations
 savecost = zeros(Niter,1); % value of cost function at each iteration
+usedArr = [];
 
 for counter = 1:Niter
+    if ismember(10, usedArr) && ismember(1, usedArr) && ismember(2, usedArr) && ismember(3, usedArr) && ismember(4, usedArr) && ismember(5, usedArr) && ismember(6, usedArr) && ismember(7, usedArr) && ismember(8, usedArr) && ismember(9, usedArr)
+        usedArr = [];
+    end
+    
     k = randi(10); % choose a training point at random
+    while ismember(k, usedArr)
+        k = randi(10);
+    end
+    if counter <= 20
+        usedArr
+    end
+    usedArr(end + 1) = k;
+    
     x = [x1(k); x2(k)];
     % Forward pass
     a2 = activate(x,W2,b2);
@@ -42,6 +55,7 @@ end
 
 % Show decay of cost function
 save costvec
+
 semilogy([1:1e4:Niter],savecost(1:1e4:Niter))
 
 function costval = cost(W2,W3,W4,b2,b3,b4)
