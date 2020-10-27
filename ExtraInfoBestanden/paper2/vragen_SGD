@@ -1,0 +1,54 @@
+Train faster, generalize better: Stability of stochastic gradient descent:
+
+
+
+1) WAT IS DE BIJDRAGE?
+
+De paper toont aan dat parametrische modellen (zoals deep learning netwerken) die getraind worden met de stochastic gradient method SGM een kleine generalisatie error hebben wanneer het aantal iteraties relatief klein is.
+
+De paper toont bijgevolg ook dat het beperken van de uitvoeringstijd (door bv. modellen te creëren waarbij SGM snel convergeert) niet alleen voordelig is voor computationele redenen, maar ook voor het verkleinen van de generalisatie error.
+
+2) WAAROM IS DIT BELANGRIJK?
+
+Dit is om verschillende reden belangrijk:
+
+	- Het vermijden van overfitting is belangrijk om een goed getraind model te hebben. Een 	  kleine generalisatie error kunnen verkrijgen na een relatief klein aantal 		  	    iteraties verkleint ook de kans op overfitting. (Overfitting treed vooral op wanneer het 		  netwerk 'te veel' wordt getraind).
+	- Snel een kleine generalisatie error verkrijgen is algoritmisch gezien voordelig (minder 		  uitvoeringstijd voor het trainen van het model).
+
+3) HOE HEEFT MEN DIT AANGETOOND?
+
+De paper doet verschillende theoretische afleidingen voor het bepalen van stabiliteitsgrenzen voor de Stochastic Gradient Descent methode. Deze theoretische grenzen worden ook experimenteel geverifieerd. Hiermee wordt aangetoond dat de SGDM stabiel is in het geval dat we 2 verschillende datasets hebben waarvan 1 data punt verschilt. Deze afleidingen gebeuren voor verschillende cases van verlies-functies: convex, non-convex, verschillende smoothness,...
+
+Deze afleidingen steunen op basis van standaard Lipschitz en smoothness veronderstellingen.
+
+De link tussen de stabiliteit van SGM en een goede generalisatie in het model dat SGM gebruikt is hier belangrijk om in te zien. Dit is ook waar de paper op steunt om de bijdrage aan te tone.
+
+		GOEDE STABILITEIT SGM => GOEDE GENERALISATIE (indien klein aantal stappen)
+
+####################################################################################################
+intuïtieve verklaring van bovenstaande implicatie: voor 2 datasets die maar in 1 datapunt van elkaar verschillen zal het resultaat van SGM in beide gevallen weinig van elkaar verschillen (stabiliteit). Door dat het resulataat weinig verschilt toont dit aan dat het resultaat van SGM voor de 1ne dataset ook een goede generalisatie is voor de andere dataset en omgekeerd. Het punt waarin ze verschillen zal hoogstwaarschijnlijk correct geclassificeerd geworden in beide gevallen omwille van het kleine verschil tussen de resultaten van SGM voor beide datasets => komt overeen met een goede generalisatie.
+####################################################################################################
+
+4) OP WELKE MANIER KAN DIT RESULTAAT NUTTIG GEBRUIKT WORDEN?
+
+Zoals vermeld in (1) kan het voor ontwerpers van trainingsmodellen beter zijn om te focussen op het ontwerpen van modellen waarbij de SGM methode snelle convergentie naar het gewenste error niveau. Om (zoals vermeld in (2)) een goede generalisatie te hebben en overfitting te vermijden.
+
+5) HOE WERDEN DE EXPERIMENTEN UITGEVOERD?
+
+De experimenten zijn uitgevoerd op verschillende grote datasets met verschillende configuraties van modellen afhankelijk van de dataset. De gebruikte modellen zijn niet state-of-the-art maar diende voornamelijk voor duidelijk de theoretisch afgeleide stabiliteitsgrenzen te kunnen nagaan en de experimentele resultaten correct te kunnen interpreteren.
+
+6) WAT ZIJN DE RESULTATEN VAN DEZE EXPERIMENTEN?
+
+De experimenten tonen een duidelijk verband tussen de stabiliteit van SGM (in de paper gebruikt men de parameter afstand als maat voor de stabiliteit) en de generalisatie error. Dit verband is in ieder geval niet lineair maar er is duidelijk te zien dat voor de modellen waarbij de parameter afstand snel stijgt de generalisatie error eveneens sneller stijgt dan in het geval van andere modellen waar de parameter afstand trager stijgt.
+
+Zoals eerder vaak aangehaald gebruiken de experimenten ook 2 datasets die in 1 datapunt van elkaar verschillen. De kans dat de SGM dit datapunt vroeg gebruikt voor de optimalisatie van het model is klein, maar de resultaten tonen wel aan dat de parameter afstand veel sneller stijgt in het geval dat dit datapunt vroeg in de optimalisatie voorkomt i.p.v. later. In dit geval krijgen we ook een grotere generalisatie fout.
+
+
+
+
+
+
+
+
+
+
