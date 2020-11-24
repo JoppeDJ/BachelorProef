@@ -16,48 +16,45 @@ N = length(x1);
 
 % Initialize weights and biases
 rng(5000);
-W2 = normrnd(0, sigma1, 2, 2); W3 = normrnd(0, sigma1, 3, 2); W4 = normrnd(0, sigma1, 2, 3);
-b2 = normrnd(0, sigma1, 2, 1); b3 = normrnd(0, sigma1, 3, 1); b4 = normrnd(0, sigma1, 2, 1);
+W2 = normrnd(0, sigma1, 5, 2); 
+W3 = normrnd(0, sigma1, 2, 5); 
+%W4 = normrnd(0, sigma1, 3, 4);
+%W5 = normrnd(0, sigma1, 2, 3);
+
+b2 = normrnd(0, sigma1, 5, 1); 
+b3 = normrnd(0, sigma1, 2, 1); 
+%b4 = normrnd(0, sigma1, 3, 1);
+%b5 = normrnd(0, sigma1, 2, 1);
 
 % Forward and Back propagate
-eta = 0.15; % learning rate
-Niter = 1e5; % number of SG iterations
+eta = 0.05; % learning rate
+Niter = 1e6; % number of SG iterations
 savecost = zeros(Niter,1); % value of cost function at each iteration
-usedArr = [];
 
 for counter = 1:Niter
-    if ismember(10, usedArr) && ismember(1, usedArr) && ismember(2, usedArr) && ismember(3, usedArr) && ismember(4, usedArr) && ismember(5, usedArr) && ismember(6, usedArr) && ismember(7, usedArr) && ismember(8, usedArr) && ismember(9, usedArr)
-        usedArr = [];
-    end
-    
     k = randi(N); % choose a training point at random
-    
-    while ismember(k, usedArr)
-        k = randi(N);
-    end
-    usedArr(end + 1) = k;
-    
     x = [x1(k); x2(k)];
     % Forward pass
     a2 = activate(x,W2,b2);
     a3 = activate(a2,W3,b3);
-    a4 = activate(a3,W4,b4);
+    %a4 = activate(a3,W4,b4);
+    %a5 = activate(a4,W5,b5);
     % Backward pass
-    delta4 = a4.*(1-a4).*(a4-y(:,k));
-    delta3 = a3.*(1-a3).*(W4'*delta4);
+    %delta5 = a5.*(1-a5).*(a5-y(:,k));
+    %delta4 = a4.*(1-a4).*(W5'*delta5);
+    delta3 = a3.*(1-a3).*(a3-y(:,k));
     delta2 = a2.*(1-a2).*(W3'*delta3);
     % Gradient step
-    W2 = W2 * (1 - (eta/(sigma1 * N))) - (eta*delta2*x')/ sigma2;
-    W3 = W3 * (1 - (eta/(sigma1 * N))) - (eta*delta3*a2')/ sigma2;
-    W4 = W4 * (1 - (eta/(sigma1 * N))) - (eta*delta4*a3')/ sigma2;
-    b2 = b2 * (1 - (eta/(sigma1 * N))) - (eta*delta2)/ sigma2;
-    b3 = b3 * (1 - (eta/(sigma1 * N))) - (eta*delta3)/ sigma2;
-    b4 = b4 * (1 - (eta/(sigma1 * N))) - (eta*delta4)/ sigma2;
+    W2 = W2 * (1 - (eta/(sigma1^2 * N))) - (eta*delta2*x')/ (sigma2^2);
+    W3 = W3 * (1 - (eta/(sigma1^2 * N))) - (eta*delta3*a2')/ (sigma2^2);
+    %W4 = W4 * (1 - (eta/(sigma1^2 * N))) - (eta*delta4*a3')/ (sigma2^2);
+    %W5 = W5 * (1 - (eta/(sigma1^2 * N))) - (eta*delta5*a4')/ (sigma2^2);
+    b2 = b2 * (1 - (eta/(sigma1^2 * N))) - (eta*delta2)/ (sigma2^2);
+    b3 = b3 * (1 - (eta/(sigma1^2 * N))) - (eta*delta3)/ (sigma2^2);
+    %b4 = b4 * (1 - (eta/(sigma1^2 * N))) - (eta*delta4)/ (sigma2^2);
+    %b5 = b5 * (1 - (eta/(sigma1^2 * N))) - (eta*delta5)/ (sigma2^2);
     % Monitor progress
-    newcost = cost(W2,W3,W4,b2,b3,b4, sigma1, sigma2);  % semicolon toegevoegd voor efficientie, 
-                                        % printen duur 
-                                        % display cost to screen
-    savecost(counter) = newcost;
+    savecost(counter) = cost(W2,W3,b2,b3, sigma1, sigma2);
 end
 
 % Show decay of cost function
@@ -67,8 +64,8 @@ semilogy([1:1e2:Niter],savecost(1:1e2:Niter))
 %generate test data
 [xA_t, yA_t, xB_t, yB_t] = random_data_generator(100, 200);
 
-x1_t = [xA xB];
-x2_t = [yA yB];
+x1_t = [xA_t xB_t];
+x2_t = [yA_t yB_t];
 N = length(x1_t);
 
 XA = {};
@@ -81,8 +78,9 @@ for c = 1:N
     % Forward pass
     a2 = activate(x,W2,b2);
     a3 = activate(a2,W3,b3);
-    a4 = activate(a3,W4,b4);
-    if a4(1) >= a4(2)
+    %a4 = activate(a3,W4,b4);
+    %a5 = activate(a4,W5,b5);
+    if a3(1) >= a3(2)
         XA = [XA, x1_t(c)];
         YA = [YA, x2_t(c)];
     else
@@ -110,20 +108,21 @@ scatter(XA,YA,'filled')
 scatter(XB,YB,'filled')
 plot(xunit, yunit);
 
-function costval = cost(W2,W3,W4,b2,b3,b4, sigma1, sigma2)
+function costval = cost(W2,W3,b2,b3, sigma1, sigma2)
     costvec = zeros(N,1);
 
     for i = 1:N
         x =[x1(i);x2(i)];
         a2 = activate(x,W2,b2);
         a3 = activate(a2,W3,b3);
-        a4 = activate(a3,W4,b4);
-        costvec(i) = norm(y(:,i) - a4,2);
+        %a4 = activate(a3,W4,b4);
+        %a5 = activate(a4,W5,b5);
+        costvec(i) = norm(y(:,i) - a3,2);
     end
     
-    costReg = norm(W2)^2 + norm(W3)^2 + norm(W4)^2 + norm(b2)^2 + norm(b3)^2 + norm(b4)^2;
+    costReg = norm(W2)^2 + norm(W3)^2 + norm(b2)^2 + norm(b3)^2;
 
-    costval = norm(costvec,2)^2 / sigma2 + costReg / sigma1;
+    costval = norm(costvec,2)^2 / (sigma2^2) + costReg / (sigma1^2);
 
 end % of nested function
 
