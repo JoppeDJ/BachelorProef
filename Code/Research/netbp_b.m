@@ -6,8 +6,8 @@ sigma1 = 10;
 sigma2 = 1;
 
 % Generate 'random' data
-[xA, yA, xB, yB] = random_data_generator(100, 100)
-%[xA_t, yA_t, xB_t, yB_t] = random_data_generator(100, 200)
+[xA, yA, xB, yB] = random_data_generator(100, 100);
+
 %NETBP Uses backpropagation to train a network
 x1 = [xA xB];
 x2 = [yA yB];
@@ -52,6 +52,53 @@ end
 % Show decay of cost function
 save costvec
 semilogy([1:1e2:Niter],savecost(1:1e2:Niter))
+
+%generate test data
+[xA_t, yA_t, xB_t, yB_t] = random_data_generator(100, 200);
+
+x1_t = [xA_t xB_t];
+x2_t = [yA_t yB_t];
+N = length(x1_t);
+
+XA = {};
+YA = {};
+XB = {};
+YB = {};
+
+for i = 1:N
+    x = [x1_t(i); x2_t(i)];
+    x
+    % Forward pass
+    a2 = activate(x,W2,b2);
+    a3 = activate(a2,W3,b3);
+    a4 = activate(a3,W4,b4);
+    if a4(1) >= a4(2)
+        XA = [XA, x1_t(i)];
+        YA = [YA, x2_t(i)];
+    else
+        XB = [XB, x1_t(i)];
+        YB = [YB, x2_t(i)];
+    end
+end
+
+XA = cell2mat(XA);
+YA = cell2mat(YA);
+XB = cell2mat(XB);
+YB = cell2mat(YB);
+
+th = 0:pi/50:2*pi;
+xunit = 0.3 * cos(th) + 0.5;
+yunit = 0.3 * sin(th) + 0.5;
+
+
+
+figure
+hold on
+axis([0 1 0 1])
+%scatter(X,Y,[],'filled')
+scatter(XA,YA,'filled')
+scatter(XB,YB,'filled')
+plot(xunit, yunit);
 
 function costval = cost(W2,W3,W4,b2,b3,b4, sigma1, sigma2)
     costvec = zeros(N,1);
