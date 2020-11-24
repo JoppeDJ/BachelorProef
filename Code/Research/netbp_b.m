@@ -5,10 +5,13 @@ sigma1 = 10;
 % Verdeling ruis : N(0, sigma2)
 sigma2 = 1;
 
+% Generate 'random' data
+[xA, yA, xB, yB] = random_data_generator(100, 100)
+%[xA_t, yA_t, xB_t, yB_t] = random_data_generator(100, 200)
 %NETBP Uses backpropagation to train a network
-x1 = [0.1,0.3,0.1,0.6,0.4,0.6,0.5,0.9,0.4,0.7];
-x2 = [0.1,0.4,0.5,0.9,0.2,0.3,0.6,0.2,0.4,0.6];
-y = [ones(1,5) zeros(1,5); zeros(1,5) ones(1,5)];
+x1 = [xA xB];
+x2 = [yA yB];
+y = [ones(1,length(xA)) zeros(1,length(xB)); zeros(1,length(xA)) ones(1,length(xB))];
 N = length(x1);
 
 % Initialize weights and biases
@@ -22,7 +25,7 @@ Niter = 1e5; % number of SG iterations
 savecost = zeros(Niter,1); % value of cost function at each iteration
 
 for counter = 1:Niter
-    k = randi(10); % choose a training point at random
+    k = randi(N); % choose a training point at random
     x = [x1(k); x2(k)];
     % Forward pass
     a2 = activate(x,W2,b2);
@@ -51,9 +54,9 @@ save costvec
 semilogy([1:1e2:Niter],savecost(1:1e2:Niter))
 
 function costval = cost(W2,W3,W4,b2,b3,b4, sigma1, sigma2)
-    costvec = zeros(10,1);
+    costvec = zeros(N,1);
 
-    for i = 1:10
+    for i = 1:N
         x =[x1(i);x2(i)];
         a2 = activate(x,W2,b2);
         a3 = activate(a2,W3,b3);
