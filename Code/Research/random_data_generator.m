@@ -12,7 +12,7 @@ YB = {};
 
 for index = 1:nbPoints
     distance = sqrt((X(index) - 0.5)^2 + (Y(index) - 0.5)^2);
-    if distance <= 0.3
+    if distance <= 0.4
         XA = [XA, X(index)];
         YA = [YA, Y(index)];
     else

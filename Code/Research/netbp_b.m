@@ -6,7 +6,7 @@ sigma1 = 10;
 sigma2 = 1;
 
 % Generate 'random' data
-[xA, yA, xB, yB] = random_data_generator(100, 100);
+[xA, yA, xB, yB] = random_data_generator(1000, 100);
 
 %NETBP Uses backpropagation to train a network
 x1 = [xA xB];
@@ -20,12 +20,23 @@ W2 = normrnd(0, sigma1, 2, 2); W3 = normrnd(0, sigma1, 3, 2); W4 = normrnd(0, si
 b2 = normrnd(0, sigma1, 2, 1); b3 = normrnd(0, sigma1, 3, 1); b4 = normrnd(0, sigma1, 2, 1);
 
 % Forward and Back propagate
-eta = 0.05; % learning rate
+eta = 0.15; % learning rate
 Niter = 1e5; % number of SG iterations
 savecost = zeros(Niter,1); % value of cost function at each iteration
+usedArr = [];
 
 for counter = 1:Niter
+    if ismember(10, usedArr) && ismember(1, usedArr) && ismember(2, usedArr) && ismember(3, usedArr) && ismember(4, usedArr) && ismember(5, usedArr) && ismember(6, usedArr) && ismember(7, usedArr) && ismember(8, usedArr) && ismember(9, usedArr)
+        usedArr = [];
+    end
+    
     k = randi(N); % choose a training point at random
+    
+    while ismember(k, usedArr)
+        k = randi(N);
+    end
+    usedArr(end + 1) = k;
+    
     x = [x1(k); x2(k)];
     % Forward pass
     a2 = activate(x,W2,b2);
@@ -56,8 +67,8 @@ semilogy([1:1e2:Niter],savecost(1:1e2:Niter))
 %generate test data
 [xA_t, yA_t, xB_t, yB_t] = random_data_generator(100, 200);
 
-x1_t = [xA_t xB_t];
-x2_t = [yA_t yB_t];
+x1_t = [xA xB];
+x2_t = [yA yB];
 N = length(x1_t);
 
 XA = {};
@@ -65,19 +76,18 @@ YA = {};
 XB = {};
 YB = {};
 
-for i = 1:N
-    x = [x1_t(i); x2_t(i)];
-    x
+for c = 1:N
+    x = [x1_t(c); x2_t(c)];
     % Forward pass
     a2 = activate(x,W2,b2);
     a3 = activate(a2,W3,b3);
     a4 = activate(a3,W4,b4);
     if a4(1) >= a4(2)
-        XA = [XA, x1_t(i)];
-        YA = [YA, x2_t(i)];
+        XA = [XA, x1_t(c)];
+        YA = [YA, x2_t(c)];
     else
-        XB = [XB, x1_t(i)];
-        YB = [YB, x2_t(i)];
+        XB = [XB, x1_t(c)];
+        YB = [YB, x2_t(c)];
     end
 end
 
@@ -87,8 +97,8 @@ XB = cell2mat(XB);
 YB = cell2mat(YB);
 
 th = 0:pi/50:2*pi;
-xunit = 0.3 * cos(th) + 0.5;
-yunit = 0.3 * sin(th) + 0.5;
+xunit = 0.4 * cos(th) + 0.5;
+yunit = 0.4 * sin(th) + 0.5;
 
 
 
