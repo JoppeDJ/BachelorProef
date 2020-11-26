@@ -43,7 +43,7 @@ function backward_pass(point_index)
     expectation = [data(3,point_index),data(4,point_index)];
     deltas{1,end} = activations{1,end}.*(1-activations{1,end}).*(activations{1,end} - expectation);
     for index = length(deltas):-1:2
-        deltas{1,index-1} = activations{1,index-1}.*(1-activations{1,index-1}).*(network{1,2*index - 1} - activations{1,index});
+        deltas{1,index-1} = activations{1,index-1}.*(1-activations{1,index-1}).*(network{1,2*index - 1}' * activations{1,index});
     end
 end
 
