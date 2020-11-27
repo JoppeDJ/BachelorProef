@@ -1,6 +1,8 @@
 function params = NN_gen(nodes_in_layer, method, randparams)
 % returnt cell met weight vector en bias vector matrix per laag
 % e.x. [W1 B1 W2 B2 ...]
+rng(5000);
+
 layers = length(nodes_in_layer);
 params = cell(1,2*(layers-1));
 params_counter = 1;

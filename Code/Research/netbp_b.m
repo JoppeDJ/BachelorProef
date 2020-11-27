@@ -54,15 +54,15 @@ for counter = 1:Niter
     %b4 = b4 * (1 - (eta/(sigma1^2 * N))) - (eta*delta4)/ (sigma2^2);
     %b5 = b5 * (1 - (eta/(sigma1^2 * N))) - (eta*delta5)/ (sigma2^2);
     % Monitor progress
-    savecost(counter) = cost(W2,W3,b2,b3, sigma1, sigma2);
+    %savecost(counter) = cost(W2,W3,b2,b3, sigma1, sigma2);
 end
 
 % Show decay of cost function
-save costvec
-semilogy([1:1e2:Niter],savecost(1:1e2:Niter))
+%save costvec
+%semilogy([1:1e2:Niter],savecost(1:1e2:Niter))
 
 %generate test data
-[xA_t, yA_t, xB_t, yB_t] = random_data_generator(100, 200);
+[xA_t, yA_t, xB_t, yB_t] = random_data_generator(10000, 200);
 
 x1_t = [xA_t xB_t];
 x2_t = [yA_t yB_t];
@@ -104,8 +104,8 @@ figure
 hold on
 axis([0 1 0 1])
 %scatter(X,Y,[],'filled')
-scatter(XA,YA,'filled')
 scatter(XB,YB,'filled')
+scatter(XA,YA,'filled')
 plot(xunit, yunit);
 
 function costval = cost(W2,W3,b2,b3, sigma1, sigma2)
