@@ -6,7 +6,7 @@ sigma1 = 10;
 sigma2 = 1;
 
 % Generate 'random' data
-[xA, yA, xB, yB] = random_data_generator(1000, 100);
+[xA, yA, xB, yB] = random_data_generatorr(1000, 100);
 
 %NETBP Uses backpropagation to train a network
 x1 = [xA xB];
@@ -17,23 +17,23 @@ N = length(x1);
 % Initialize weights and biases
 rng(5000);
 W2 = normrnd(0, sigma1, 5, 2); 
+b2 = normrnd(0, sigma1, 5, 1); 
 W3 = normrnd(0, sigma1, 2, 5); 
 %W4 = normrnd(0, sigma1, 3, 4);
 %W5 = normrnd(0, sigma1, 2, 3);
-
-b2 = normrnd(0, sigma1, 5, 1); 
 b3 = normrnd(0, sigma1, 2, 1); 
 %b4 = normrnd(0, sigma1, 3, 1);
 %b5 = normrnd(0, sigma1, 2, 1);
 
 % Forward and Back propagate
 eta = 0.05; % learning rate
-Niter = 1e6; % number of SG iterations
+Niter = 1e7; % number of SG iterations
 savecost = zeros(Niter,1); % value of cost function at each iteration
 
 for counter = 1:Niter
-    k = randi(N); % choose a training point at random
-    x = [x1(k); x2(k)];
+    %k = randi(N); % choose a training point at random
+    k = randperm(N, 1);
+    x = [x1(k(1)); x2(k(1))];
     % Forward pass
     a2 = activate(x,W2,b2);
     a3 = activate(a2,W3,b3);
@@ -62,7 +62,7 @@ end
 %semilogy([1:1e2:Niter],savecost(1:1e2:Niter))
 
 %generate test data
-[xA_t, yA_t, xB_t, yB_t] = random_data_generator(10000, 200);
+[xA_t, yA_t, xB_t, yB_t] = random_data_generatorr(10000, 200);
 
 x1_t = [xA_t xB_t];
 x2_t = [yA_t yB_t];
