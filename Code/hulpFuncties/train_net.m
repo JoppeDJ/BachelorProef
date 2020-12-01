@@ -4,7 +4,6 @@ function trained_network = train_net(network, data, step_size, max_iterations, b
 
 activations = cell(1, length(network)/2);
 deltas = cell(1, length(network)/2);
-
 batch_deltas_W = {};
 batch_deltas_B = {};
 for i = 1: length(network)/2
@@ -67,10 +66,11 @@ function backward_pass(point_index)
     for index = length(deltas):-1:2
         deltas{1,index-1} = activations{1,index-1}.*(1-activations{1,index-1}).*(network{1,2*index - 1}' * deltas{1,index});
     end
+    
     batch_deltas_W{1,1} = batch_deltas_W{1,1} + deltas{1,1}*[data(1,point_index);data(2,point_index)]';
     batch_deltas_B{1,1} = batch_deltas_B{1,1} + deltas{1,1};
     for index = 2:length(batch_deltas_W)
-       batch_deltas_W{1,index} = batch_deltas_W{1,index} + deltas{1,index}*activations{1,index-1}';
+       batch_deltas_W{1,index} = batch_deltas_W{1,index} + deltas{1,index} * activations{1,index-1}';
        batch_deltas_B{1,index} = batch_deltas_B{1,index} + deltas{1,index};
     end
     
