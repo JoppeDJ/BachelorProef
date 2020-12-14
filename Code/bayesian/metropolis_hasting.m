@@ -5,7 +5,7 @@ function resultNetworks = metropolis_hasting()
 data = [data_XA data_XB; data_YA data_YB; ones(1,length(data_XA)) zeros(1,length(data_XB)); zeros(1,length(data_XA)) ones(1,length(data_XB))];
 M = size(data);
 
-N = 1000;
+N = 100000;
 xCell = cell(1,N);
 
 
@@ -15,14 +15,16 @@ xCell{1,1} = NN_gen([2 5 2],'normal',[0 10],5000);
 
 
 %Burn in
-for i = 1:1000
+i = 0;
+while i < 100000
     k = randi(M(1,2));
     xt = draw_Q(xCell{1, 1});
     p = min([1;f(k,xt)/f(k,xCell{1,1})]);
     
-    bool = rand <= p;
-    if bool
+    r = rand;
+    if r <= p
       xCell{1,1} = xt;
+      i = i + 1;
     end
 end
 
@@ -33,8 +35,8 @@ while i < N
     
     p = min([1;f(k,xt)/f(k,xCell{1,i})]);
     
-    bool = rand <= p;
-    if bool
+    r = rand;
+    if r <= p
       xCell{1,i+1} = xt;
       i = i + 1;
     end
@@ -56,12 +58,11 @@ end
 resultNetworks = cell(1,100);
 %draw 100 samples to use for classification
 for i = 1:N
-   indexes = randperm(N,100);
+  indexes = randperm(N,100);
    for ind = 1:100
        resultNetworks{1,ind} = xCell{1,indexes(ind)};
    end
 end
-
 
 end
 
