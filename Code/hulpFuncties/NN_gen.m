@@ -21,9 +21,9 @@ end
 %geeft random matrix terug gegeven de afmetingen de methode van random en
 %de parameters voor de randomverdeling
 function randM = rand_init(rows, columns)
-    if method == 'random'
+    if method == "random"
         randM = randn(rows,columns);
-    elseif method == 'normal' 
+    elseif method == "normal" 
         mu = randparams(1);
         sigma = randparams(2);
         randM = normrnd(mu, sigma, rows, columns);

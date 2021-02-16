@@ -108,7 +108,7 @@ scatter(XB,YB,'filled')
 scatter(XA,YA,'filled')
 plot(xunit, yunit);
 
-function costval = cost(W2,W3,b2,b3, sigma1, sigma2)
+function costval = cost(W2,W3,b2,b3,sigma1,sigma2)
     costvec = zeros(N,1);
 
     for i = 1:N
