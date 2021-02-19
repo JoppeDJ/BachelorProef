@@ -1,4 +1,4 @@
-function roster = gen_roster()
+function roster = gen_grid()
 
 xVal = 0:0.05:1;
 yVal = 0:0.05:1;

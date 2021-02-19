@@ -53,7 +53,7 @@ end
 resultNetworks = cell(1,100);
 %draw 100 samples to use for classification
 indexes = randperm(N,100);
-for ind = 1:100
+for ind = 1:10 
     resultNetworks{1,ind} = xCell{1,indexes(ind)};
 end
 
