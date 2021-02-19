@@ -1,7 +1,7 @@
 function roster = gen_grid()
 
-xVal = 0:0.05:1;
-yVal = 0:0.05:1;
+xVal = 0:0.02:1;
+yVal = 0:0.02:1;
 
 roster = [];
 for i = 1: length(xVal)
