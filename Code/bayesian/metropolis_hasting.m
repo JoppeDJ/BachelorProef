@@ -1,7 +1,9 @@
 function resultNetworks = metropolis_hasting(iterations)
 %METROPOLIS_HASTING
+seed = randi(1500)
+
 % data generation
-[data_XA, data_YA, data_XB, data_YB] = random_data_generator(1000,100,"Cirkel");
+[data_XA, data_YA, data_XB, data_YB] = random_data_generator(1000,seed,"Cirkel");
 data = [data_XA data_XB; data_YA data_YB; ones(1,length(data_XA)) zeros(1,length(data_XB)); zeros(1,length(data_XA)) ones(1,length(data_XB))];
 M = size(data);
 
@@ -10,20 +12,22 @@ xCell = cell(1,N);
 
 
 %draw initial
-xCell{1,1} = NN_gen([2 5 2],'normal',[0 10],5000);
+xCell{1,1} = NN_gen([2 5 2],'normal',[0 10],seed);
 
 burn_count = 0;
 %Burn in
 i = 0;
-while i < 200
-    k = randi(M(1,2));
+old_f = f(xCell{1,1});
+while i < 300
     xt = draw_Q(xCell{1, 1});
-    p = min([1;f(k,xt)/f(k,xCell{1,1})]);
+    new_f = f(xt);
+    p = min([1;new_f/old_f]);
     r = rand;
     burn_count = burn_count + 1;
     if r <= p
       xCell{1,1} = xt;
       i = i + 1;
+      old_f = new_f;
     end
 end
 
@@ -34,21 +38,22 @@ alg_count = 0;
 
 i = 1;
 while i < N
-    k = randi(M(1,2));
     xt = draw_Q(xCell{1, i});
-    p = min([1;f(k,xt)/f(k,xCell{1,i})]);
+    new_f = f(xt);
+    p = min([1;new_f/old_f]);
     r = rand;
     alg_count = alg_count + 1;
     if r <= p
       xCell{1,i+1} = xt;
       i = i + 1;
+      old_f = new_f;
     end
 end
 
 iterations  = N/alg_count;
 iterations
 
- function value = f(index, parameters)
+ function value = f(parameters)
      
 %      exp_value = [data(3,index); data(4,index)];
 %      data_point = [data(1,index); data(2,index)];
@@ -82,4 +87,3 @@ resultNetworks = xCell;
 % end
 
 end
-
