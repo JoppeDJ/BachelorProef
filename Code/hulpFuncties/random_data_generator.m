@@ -23,11 +23,11 @@ if shapeStr == "Cirkel"
     end
 elseif shapeStr == "Driehoek"
     for index = 1:nbPoints
-        if X(index) < 0.2 || X(index) > 0.8 || Y(index) > 0.8 || Y(index) < 0.2
+        if X(index) < 0.1 || X(index) > 0.9 || Y(index) > 0.9 || Y(index) < 0.1
             XB = [XB, X(index)];
             YB = [YB, Y(index)];
         elseif X(index) < 0.5
-            if Y(index) <= 2*X(index) - 0.2
+            if Y(index) <= 2*X(index) - 0.1
                 XA = [XA, X(index)];
                 YA = [YA, Y(index)];
             else
@@ -35,7 +35,7 @@ elseif shapeStr == "Driehoek"
                 YB = [YB, Y(index)];
             end
         elseif X(index) > 0.5
-            if Y(index) <= -2*X(index) + 1.8
+            if Y(index) <= -2*X(index) + 1.9
                 XA = [XA, X(index)];
                 YA = [YA, Y(index)];
             else
