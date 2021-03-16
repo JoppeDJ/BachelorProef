@@ -1,10 +1,10 @@
-function resultNetworks = metropolis_hasting(iterations)
+function resultNetworks = metropolis_hasting(iterations, q_sigma, reg_sigma, data)
 %METROPOLIS_HASTING
 seed = randi(1500)
 
 % data generation
-[data_XA, data_YA, data_XB, data_YB] = random_data_generator(1000,seed,"Cirkel");
-data = [data_XA data_XB; data_YA data_YB; ones(1,length(data_XA)) zeros(1,length(data_XB)); zeros(1,length(data_XA)) ones(1,length(data_XB))];
+% [data_XA, data_YA, data_XB, data_YB] = random_data_generator(1000,seed,"Cirkel");
+% data = [data_XA data_XB; data_YA data_YB; ones(1,length(data_XA)) zeros(1,length(data_XB)); zeros(1,length(data_XA)) ones(1,length(data_XB))];
 M = size(data);
 
 N = iterations;
@@ -12,14 +12,14 @@ xCell = cell(1,N);
 
 
 %draw initial
-xCell{1,1} = NN_gen([2 5 2],'normal',[0 10],seed);
+xCell{1,1} = NN_gen([2 5 2],'normal',[0 reg_sigma],seed);
 
 burn_count = 0;
 %Burn in
 i = 0;
 old_f = f(xCell{1,1});
-while i < 300
-    xt = draw_Q(xCell{1, 1});
+while i < 500
+    xt = draw_Q(xCell{1, 1}, q_sigma);
     new_f = f(xt);
     p = min([1;new_f/old_f]);
     r = rand;
@@ -38,7 +38,7 @@ alg_count = 0;
 
 i = 1;
 while i < N
-    xt = draw_Q(xCell{1, i});
+    xt = draw_Q(xCell{1, i}, q_sigma);
     new_f = f(xt);
     p = min([1;new_f/old_f]);
     r = rand;
@@ -53,7 +53,7 @@ end
 iterations  = N/alg_count;
 iterations
 
- function value = f(parameters)
+ function value = f(network_weights)
      
 %      exp_value = [data(3,index); data(4,index)];
 %      data_point = [data(1,index); data(2,index)];
@@ -64,13 +64,13 @@ iterations
      for ix = 1:length(data)
          exp_value = [data(3,ix); data(4,ix)];
          data_point = [data(1,ix); data(2,ix)];
-         cost1 = cost1 * exp(-0.5*(norm(exp_value - classify(data_point, parameters)))^2); 
+         cost1 = cost1 * exp(-0.5*(norm(exp_value - classify(data_point, network_weights)))^2); 
      end
      
 
      cost2 = 1;
-     for j = 1:length(parameters) 
-         cost2 = cost2 * exp(-0.5*(norm(parameters{1,j})/10)^2);      
+     for j = 1:length(network_weights) 
+         cost2 = cost2 * exp(-0.5*(norm(network_weights{1,j})/reg_sigma)^2);      
      end   
      value = cost1 * cost2;
  end
