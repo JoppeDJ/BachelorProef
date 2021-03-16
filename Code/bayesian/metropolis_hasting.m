@@ -1,4 +1,4 @@
-function resultNetworks = metropolis_hasting(iterations, q_sigma, reg_sigma, data)
+function resultNetworks = metropolis_hasting(network, iterations, q_sigma, reg_sigma, data)
 %METROPOLIS_HASTING
 seed = randi(1500)
 
@@ -12,7 +12,7 @@ xCell = cell(1,N);
 
 
 %draw initial
-xCell{1,1} = NN_gen([2 5 2],'normal',[0 reg_sigma],seed);
+xCell{1,1} = NN_gen(network,'normal',[0 reg_sigma],seed);
 
 burn_count = 0;
 %Burn in
