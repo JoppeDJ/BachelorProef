@@ -1,7 +1,5 @@
-function resultNetworks = metropolis_hasting(network, iterations, q_sigma, reg_sigma, data)
+function resultNetworks = metropolis_hasting(network, iterations, q_sigma, reg_sigma, data, seed)
 %METROPOLIS_HASTING
-seed = randi(1500)
-
 % data generation
 % [data_XA, data_YA, data_XB, data_YB] = random_data_generator(1000,seed,"Cirkel");
 % data = [data_XA data_XB; data_YA data_YB; ones(1,length(data_XA)) zeros(1,length(data_XB)); zeros(1,length(data_XA)) ones(1,length(data_XB))];
@@ -17,10 +15,10 @@ xCell{1,1} = NN_gen(network,'normal',[0 reg_sigma],seed);
 burn_count = 0;
 %Burn in
 i = 0;
-old_f = f(xCell{1,1});
-while i < 500
+old_f = f(xCell{1,1}, reg_sigma, data);
+while i < 1000
     xt = draw_Q(xCell{1, 1}, q_sigma);
-    new_f = f(xt);
+    new_f = f(xt, reg_sigma, data);
     p = min([1;new_f/old_f]);
     r = rand;
     burn_count = burn_count + 1;
@@ -39,7 +37,7 @@ alg_count = 0;
 i = 1;
 while i < N
     xt = draw_Q(xCell{1, i}, q_sigma);
-    new_f = f(xt);
+    new_f = f(xt, reg_sigma, data);
     p = min([1;new_f/old_f]);
     r = rand;
     alg_count = alg_count + 1;
@@ -53,7 +51,7 @@ end
 iterations  = N/alg_count;
 iterations
 
- function value = f(network_weights)
+ function value = f(network_weights, reg_sigma, data)
      
 %      exp_value = [data(3,index); data(4,index)];
 %      data_point = [data(1,index); data(2,index)];
