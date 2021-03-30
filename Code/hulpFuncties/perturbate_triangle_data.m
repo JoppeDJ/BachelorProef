@@ -4,9 +4,9 @@ function new_data = perturbate_triangle_data(data, low, high, seed)
     
     closest_X = {};
     closest_Y = {};
-    bottom_left  = [0.2 0.2];
-    bottom_right  = [0.8 0.2];
-    top  = [0.5 0.8];
+    bottom_left  = [0.1 0.1];
+    bottom_right  = [0.9 0.1];
+    top  = [0.5 0.9];
     
     [r1,c1] = size(data);
     for i = 1:c1
