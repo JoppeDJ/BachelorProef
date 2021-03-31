@@ -1,9 +1,15 @@
-function resultNetworks = metropolis_hasting(network, iterations, q_sigma, reg_sigma, data, seed)
+function resultNetworks = metropolis_hasting(network, iterations, q_sigma, reg_sigma, all_data, seed, type)
 %METROPOLIS_HASTING
 % data generation
 % [data_XA, data_YA, data_XB, data_YB] = random_data_generator(1000,seed,"Cirkel");
 % data = [data_XA data_XB; data_YA data_YB; ones(1,length(data_XA)) zeros(1,length(data_XB)); zeros(1,length(data_XA)) ones(1,length(data_XB))];
-M = size(data);
+if type == "FULL"
+    data = all_data;
+elseif type == "BATCH" || type == "RANDOM_BATCH"
+    msize = numel(all_data);
+    data = all_data(randperm(msize, 750));
+end
+    
 
 N = iterations;
 xCell = cell(1,N);
@@ -39,6 +45,12 @@ i = 1;
 while i < N
     xt = draw_Q(xCell{1, i}, q_sigma);
     new_f = f(xt, reg_sigma, data);
+    
+    if type == "RANDOM_BATCH"
+        msize = numel(all_data);
+        data = all_data(randperm(msize, 750));
+    end
+    
     p = min([1;new_f/old_f]);
     r = rand;
     alg_count = alg_count + 1;
