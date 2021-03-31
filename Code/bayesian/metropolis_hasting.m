@@ -10,13 +10,14 @@ xCell = cell(1,N);
 
 
 %draw initial
-xCell{1,1} = NN_gen(network,'normal',[0 reg_sigma],seed);
+xCell{1,1} = NN_gen(network,'normal',[0 10],seed);
 
 burn_count = 0;
+burn_N = fix(iterations/10);
 %Burn in
 i = 0;
 old_f = f(xCell{1,1}, reg_sigma, data);
-while i < 1000
+while i < burn_N
     xt = draw_Q(xCell{1, 1}, q_sigma);
     new_f = f(xt, reg_sigma, data);
     p = min([1;new_f/old_f]);
@@ -29,7 +30,7 @@ while i < 1000
     end
 end
 
-burned = 200/burn_count;
+burned = burn_N/burn_count;
 burned
 
 alg_count = 0;
