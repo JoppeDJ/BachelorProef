@@ -4,12 +4,12 @@ function new_data = perturbate_star_data(data, low, high, seed)
     
     closest_X = {};
     closest_Y = {};
-    bottom_left_1  = [0.2 0.3];
-    bottom_right_1  = [0.8 0.3];
-    top_1  = [0.5 0.9];
-    bottom_left_2  = [0.2 0.7];
-    bottom_right_2  = [0.8 0.7];
-    top_2  = [0.5 0.1];
+    bottom_left_1  = [0.1625 0.275];
+    bottom_right_1  = [0.8375 0.275];
+    top_1  = [0.5 0.95];
+    bottom_left_2  = [0.1625 0.725];
+    bottom_right_2  = [0.8375 0.725];
+    top_2  = [0.5 0.05];
     
     [r1,c1] = size(data);
     for i = 1:c1
