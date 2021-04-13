@@ -1,13 +1,12 @@
-function resultNetworks = metropolis_hasting(network, iterations, q_sigma, reg_sigma, all_data, seed, type)
+function resultNetworks = metropolis_hasting(first_network, iterations, burn_N, q_sigma, reg_sigma, all_data, seed, type)
 %METROPOLIS_HASTING
 % data generation
 % [data_XA, data_YA, data_XB, data_YB] = random_data_generator(1000,seed,"Cirkel");
 % data = [data_XA data_XB; data_YA data_YB; ones(1,length(data_XA)) zeros(1,length(data_XB)); zeros(1,length(data_XA)) ones(1,length(data_XB))];
 if type == "FULL"
     data = all_data;
-elseif type == "BATCH" || type == "RANDOM_BATCH"
-    msize = numel(all_data);
-    data = all_data(randperm(msize, 750));
+elseif type == "BATCH" || type == "RANDOM_BATCH"   
+    data = datasample(all_data,750,2,'Replace',false);
 end
     
 
@@ -16,15 +15,20 @@ xCell = cell(1,N);
 
 
 %draw initial
-xCell{1,1} = NN_gen(network,'normal',[0 reg_sigma],seed);
+xCell{1,1} = first_network;
 
 burn_count = 0;
 %Burn in
 i = 0;
 old_f = f(xCell{1,1}, reg_sigma, data);
-while i < 1000
+while i < burn_N
     xt = draw_Q(xCell{1, 1}, q_sigma);
     new_f = f(xt, reg_sigma, data);
+    
+    if type == "RANDOM_BATCH"
+        data = datasample(all_data,750,2,'Replace',false);
+    end
+    
     p = min([1;new_f/old_f]);
     r = rand;
     burn_count = burn_count + 1;
@@ -35,8 +39,12 @@ while i < 1000
     end
 end
 
-burned = 200/burn_count;
+burned = burn_N/burn_count;
 burned
+
+if type == "RANDOM_BATCH"
+        data = datasample(all_data,750,2,'Replace',false);
+end
 
 alg_count = 0;
 
@@ -46,8 +54,7 @@ while i < N
     new_f = f(xt, reg_sigma, data);
     
     if type == "RANDOM_BATCH"
-        msize = numel(all_data);
-        data = all_data(randperm(msize, 750));
+        data = datasample(all_data,750,2,'Replace',false);
     end
     
     p = min([1;new_f/old_f]);
@@ -63,7 +70,7 @@ end
 iterations  = N/alg_count;
 iterations
 
- function value = f(network_weights, reg_sigma, data)
+ function value = f(network_weights, reg_sigma, datap)
      
 %      exp_value = [data(3,index); data(4,index)];
 %      data_point = [data(1,index); data(2,index)];
@@ -71,9 +78,9 @@ iterations
      % All points f:
      
      cost1 = 1;
-     for ix = 1:length(data)
-         exp_value = [data(3,ix); data(4,ix)];
-         data_point = [data(1,ix); data(2,ix)];
+     for ix = 1:length(datap)
+         exp_value = [datap(3,ix); datap(4,ix)];
+         data_point = [datap(1,ix); datap(2,ix)];
          cost1 = cost1 * exp(-0.5*(norm(exp_value - classify(data_point, network_weights)))^2); 
      end
      
