@@ -6,7 +6,7 @@ function resultNetworks = metropolis_hasting(first_network, iterations, burn_N, 
 if type == "FULL"
     data = all_data;
 elseif type == "BATCH" || type == "RANDOM_BATCH"   
-    data = datasample(all_data,750,2,'Replace',false);
+    data = strat_sample(all_data, 500);
 end
     
 
@@ -26,7 +26,7 @@ while i < burn_N
     new_f = f(xt, reg_sigma, data);
     
     if type == "RANDOM_BATCH"
-        data = datasample(all_data,750,2,'Replace',false);
+        data = strat_sample(all_data, 500);
     end
     
     p = min([1;new_f/old_f]);
@@ -43,7 +43,7 @@ burned = burn_N/burn_count;
 burned
 
 if type == "RANDOM_BATCH"
-        data = datasample(all_data,750,2,'Replace',false);
+        data = strat_sample(all_data, 500);
 end
 
 alg_count = 0;
@@ -54,7 +54,7 @@ while i < N
     new_f = f(xt, reg_sigma, data);
     
     if type == "RANDOM_BATCH"
-        data = datasample(all_data,750,2,'Replace',false);
+        data = strat_sample(all_data, 500);
     end
     
     p = min([1;new_f/old_f]);

@@ -34,7 +34,7 @@ elseif shapeStr == "Driehoek"
                 XB = [XB, X(index)];
                 YB = [YB, Y(index)];
             end
-        elseif X(index) > 0.5
+        elseif X(index) >= 0.5
             if Y(index) <= -2*X(index) + 1.9
                 XA = [XA, X(index)];
                 YA = [YA, Y(index)];
